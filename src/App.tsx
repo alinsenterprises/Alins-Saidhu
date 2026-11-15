@@ -179,15 +179,15 @@ export default function App() {
   const { itemCount } = calculateCartTotals(cartItems, null);
 
   return (
-    <div id="top" className="min-h-screen flex flex-col bg-[#F8FAFC] text-slate-900">
+    <div id="top" className="min-h-screen flex flex-col bg-[#F6F8FB] text-slate-900">
       <Preloader visible={showPreloader} onFinish={() => setShowPreloader(false)} />
 
       {bannerVisible && (
-        <div className="bg-[#0F172A] text-slate-200 text-xs border-b border-slate-800">
+        <div className="bg-gradient-to-r from-[#0B2447] via-[#0E3A6B] to-[#0B2447] text-slate-200 text-xs">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 h-9 flex items-center justify-between gap-4">
             <p className="truncate">
               Save 10% on any subscription with code{' '}
-              <span className="font-mono font-semibold text-sky-400">INSANE10</span>{' '}
+              <span className="font-mono font-semibold text-white rounded bg-white/10 border border-white/15 px-1.5 py-px">INSANE10</span>{' '}
               <span className="hidden sm:inline text-slate-400">
                 · Instant key delivery &amp; full-term replacement warranty on mrinsane.in
               </span>
@@ -247,59 +247,62 @@ export default function App() {
         )}
       </main>
 
-      <footer className="border-t border-slate-200 bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 space-y-6">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <div className="flex items-center gap-3">
-              <MrInsaneLogo size={32} mode="idle" interactive />
-              <div>
-                <div className="font-display text-sm font-bold text-slate-900">
-                  Mr. Insane · mrinsane.in
-                </div>
-                <div className="text-xs text-slate-500">
-                  Digital OTT, Music, AI &amp; Gaming Subscription Storefront
-                </div>
+      <footer className="relative bg-[#070B16] text-slate-400 overflow-hidden">
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage:
+              'radial-gradient(ellipse 50% 60% at 50% 120%, rgba(24, 140, 224, 0.22) 0%, rgba(7, 11, 22, 0) 70%)',
+          }}
+        />
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 pt-14 pb-8">
+          <div className="grid grid-cols-2 md:grid-cols-12 gap-10">
+            <div className="col-span-2 md:col-span-5 space-y-4">
+              <div className="flex items-center gap-2.5">
+                <MrInsaneLogo size={32} mode="idle" interactive />
+                <span className="font-display text-lg font-bold text-white">Mr. Insane</span>
+              </div>
+              <p className="text-sm leading-relaxed max-w-xs">
+                Member-split access to streaming, music, AI and gaming subscriptions — delivered to
+                your Order Vault in minutes.
+              </p>
+              <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs text-slate-300">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse-dot" aria-hidden="true" />
+                All systems operational
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center gap-6 text-xs font-medium text-slate-600">
-              <button
-                type="button"
-                onClick={() => handleNavigate('store', 'catalog')}
-                className="hover:text-slate-900 transition-colors"
-              >
-                Catalog
-              </button>
-              <button
-                type="button"
-                onClick={() => handleNavigate('track')}
-                className="hover:text-slate-900 transition-colors"
-              >
-                Track Order
-              </button>
-              <button
-                type="button"
-                onClick={() => handleNavigate('account')}
-                className="hover:text-slate-900 transition-colors"
-              >
-                Member Portal
-              </button>
-              <button
-                type="button"
-                onClick={() => setShowPreloader(true)}
-                className="hover:text-[#188CE0] transition-colors"
-              >
-                Replay Logo Intro
-              </button>
+            <div className="md:col-span-2 space-y-3 text-sm">
+              <div className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Store</div>
+              <button type="button" onClick={() => handleNavigate('store', 'catalog')} className="block hover:text-white transition-colors">Catalog</button>
+              <button type="button" onClick={() => handleNavigate('store', 'how-it-works')} className="block hover:text-white transition-colors">How it works</button>
+              <button type="button" onClick={() => setCartOpen(true)} className="block hover:text-white transition-colors">Your bag</button>
+            </div>
+
+            <div className="md:col-span-2 space-y-3 text-sm">
+              <div className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Account</div>
+              <button type="button" onClick={() => handleNavigate('track')} className="block hover:text-white transition-colors">Track order</button>
+              <button type="button" onClick={() => handleNavigate('account')} className="block hover:text-white transition-colors">Member portal</button>
+              <button type="button" onClick={() => setShowPreloader(true)} className="block hover:text-white transition-colors">Replay intro</button>
+            </div>
+
+            <div className="col-span-2 md:col-span-3 space-y-3 text-sm">
+              <div className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Support</div>
+              <a href="mailto:support@mrinsane.in" className="block text-slate-200 hover:text-white transition-colors">support@mrinsane.in</a>
+              <p className="text-xs leading-relaxed">Replies within 2 hours, 9am–11pm IST, every day.</p>
             </div>
           </div>
 
-          <div className="pt-6 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-slate-500">
-            <div>
-              Support: <span className="font-medium text-slate-700">support@mrinsane.in</span>{' '}
-              <span aria-hidden="true">·</span> © 2026 Mr. Insane
+          <div className="mt-12 pt-6 border-t border-white/[0.07] flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs">
+            <div>© 2026 Mr. Insane · mrinsane.in</div>
+            <div className="flex flex-wrap gap-1.5">
+              {['UPI', 'RuPay', 'Visa', 'Mastercard', 'NetBanking'].map((m) => (
+                <span key={m} className="rounded-md border border-white/10 bg-white/[0.03] px-2 py-0.5 font-mono text-[10.5px] text-slate-300">
+                  {m}
+                </span>
+              ))}
             </div>
-            <div>Accepted: UPI · RuPay · Visa · Mastercard · NetBanking</div>
           </div>
         </div>
       </footer>
