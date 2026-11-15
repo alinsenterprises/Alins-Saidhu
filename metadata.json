@@ -1,0 +1,6 @@
+{
+  "name": "Mr. Insane — Subscription Store",
+  "description": "Official storefront and member portal for mrinsane.in — instant OTT, music, AI, and gaming subscriptions.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
