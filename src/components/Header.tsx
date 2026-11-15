@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Menu, ShoppingBag, X } from 'lucide-react';
+import { Menu, ShoppingBag, UserRound, X } from 'lucide-react';
 import { MrInsaneLogo } from './MrInsaneLogo';
 import type { PublicUser } from '../shared/pricing';
 
@@ -13,13 +13,9 @@ interface HeaderProps {
   user: PublicUser | null;
 }
 
-export function Header({
-  activeView,
-  onNavigate,
-  cartCount,
-  onOpenCart,
-  user,
-}: HeaderProps) {
+type NavItem = { label: string; view: ActiveView; anchor?: string; activeOn?: ActiveView };
+
+export function Header({ activeView, onNavigate, cartCount, onOpenCart, user }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleNav = (view: ActiveView, anchor?: string) => {
@@ -27,75 +23,91 @@ export function Header({
     onNavigate(view, anchor);
   };
 
+  const accountLabel = user ? (user.role === 'admin' ? 'Admin Console' : 'Account') : 'Sign In';
+
+  const navItems: NavItem[] = [
+    { label: 'Catalog', view: 'store', anchor: 'catalog', activeOn: 'store' },
+    { label: 'How It Works', view: 'store', anchor: 'how-it-works' },
+    { label: 'Track Order', view: 'track', activeOn: 'track' },
+  ];
+
   return (
-    <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-sm border-b border-slate-200">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-8">
-        {/* Zone 1: Brand mark + single-line wordmark */}
+    <header className="sticky top-0 z-30 bg-[#070B16]/85 backdrop-blur-xl border-b border-white/[0.07] text-slate-300">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-6">
         <a
           href="#top"
           onClick={(e) => {
             e.preventDefault();
             handleNav('store', 'top');
           }}
-          className="inline-flex items-center gap-2.5 whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#188CE0] rounded-lg"
+          className="inline-flex items-center gap-2.5 whitespace-nowrap shrink-0 rounded-lg"
         >
-          <MrInsaneLogo size={34} mode="idle" interactive />
-          <span className="font-display text-lg font-bold tracking-tight text-slate-900 whitespace-nowrap shrink-0">
+          <MrInsaneLogo size={32} mode="idle" interactive />
+          <span className="font-display text-[17px] font-bold tracking-tight text-white">
             Mr. Insane
+          </span>
+          <span className="hidden sm:inline-flex items-center rounded-md border border-white/10 bg-white/[0.04] px-1.5 py-0.5 font-mono text-[10px] font-medium text-slate-400">
+            v2.6
           </span>
         </a>
 
-        {/* Zone 2: 4 concise single-line text nav links */}
         <nav
           aria-label="Primary navigation"
-          className="hidden md:flex items-center gap-7 text-sm font-medium text-slate-600"
+          className="hidden md:flex items-center gap-1 rounded-full border border-white/[0.08] bg-white/[0.03] p-1 text-[13px] font-medium"
         >
-          <button
-            type="button"
-            onClick={() => handleNav('store', 'catalog')}
-            className={`whitespace-nowrap shrink-0 py-1 transition-colors hover:text-slate-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#188CE0] ${
-              activeView === 'store' ? 'text-slate-900 underline underline-offset-8 decoration-[#188CE0] decoration-2' : ''
-            }`}
-          >
-            Catalog
-          </button>
-          <button
-            type="button"
-            onClick={() => handleNav('store', 'how-it-works')}
-            className="whitespace-nowrap shrink-0 py-1 transition-colors hover:text-slate-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#188CE0]"
-          >
-            How It Works
-          </button>
-          <button
-            type="button"
-            onClick={() => handleNav('track')}
-            className={`whitespace-nowrap shrink-0 py-1 transition-colors hover:text-slate-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#188CE0] ${
-              activeView === 'track' ? 'text-slate-900 underline underline-offset-8 decoration-[#188CE0] decoration-2' : ''
-            }`}
-          >
-            Track Order
-          </button>
+          {navItems.map((item) => {
+            const active = item.activeOn === activeView;
+            return (
+              <button
+                key={item.label}
+                type="button"
+                onClick={() => handleNav(item.view, item.anchor)}
+                aria-current={active ? 'page' : undefined}
+                className={`whitespace-nowrap rounded-full px-3.5 py-1.5 transition-colors ${
+                  active
+                    ? 'bg-white/[0.09] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                {item.label}
+              </button>
+            );
+          })}
+        </nav>
+
+        <div className="flex items-center gap-2 shrink-0">
           <button
             type="button"
             onClick={() => handleNav('account')}
-            className={`whitespace-nowrap shrink-0 py-1 transition-colors hover:text-slate-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#188CE0] ${
-              activeView === 'account' ? 'text-slate-900 underline underline-offset-8 decoration-[#188CE0] decoration-2' : ''
+            className={`hidden md:inline-flex items-center gap-2 rounded-lg px-3 py-2 text-[13px] font-medium transition-colors ${
+              activeView === 'account' ? 'text-white bg-white/[0.07]' : 'text-slate-300 hover:text-white hover:bg-white/[0.05]'
             }`}
           >
-            {user ? (user.role === 'admin' ? 'Admin Console' : 'Account') : 'Sign In'}
+            {user ? (
+              <span className="grid h-5 w-5 place-items-center rounded-full bg-gradient-to-br from-sky-400 to-[#188CE0] text-[10px] font-bold text-white">
+                {user.name.charAt(0).toUpperCase()}
+              </span>
+            ) : (
+              <UserRound className="h-4 w-4" aria-hidden="true" />
+            )}
+            {accountLabel}
           </button>
-        </nav>
 
-        {/* Zone 3: 1 primary action */}
-        <div className="flex items-center gap-2 shrink-0">
           <button
             type="button"
             onClick={onOpenCart}
             aria-label={`Open subscription bag with ${cartCount} items`}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#188CE0] hover:bg-[#0E71B8] text-white text-sm font-semibold whitespace-nowrap shrink-0 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#188CE0]"
+            className="group relative inline-flex items-center gap-2 rounded-lg bg-white px-3.5 py-2 text-[13px] font-semibold text-slate-900 shadow-[0_1px_0_rgba(255,255,255,0.4)_inset,0_8px_24px_-8px_rgba(56,189,248,0.45)] transition-transform hover:-translate-y-px active:translate-y-0"
           >
-            <ShoppingBag className="w-4 h-4" aria-hidden="true" />
-            <span className="tabular-nums">Bag ({cartCount})</span>
+            <ShoppingBag className="h-4 w-4" aria-hidden="true" />
+            <span>Bag</span>
+            <span
+              className={`min-w-5 rounded-full px-1.5 py-px text-center font-mono text-[11px] tabular-nums ${
+                cartCount > 0 ? 'bg-[#188CE0] text-white' : 'bg-slate-200 text-slate-600'
+              }`}
+            >
+              {cartCount}
+            </span>
           </button>
 
           <button
@@ -103,43 +115,25 @@ export function Header({
             onClick={() => setMobileMenuOpen((prev) => !prev)}
             aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
             aria-expanded={mobileMenuOpen}
-            className="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50"
+            className="md:hidden inline-flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 text-slate-200 hover:bg-white/[0.06]"
           >
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
       </div>
 
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-slate-200 bg-white px-4 py-3 flex flex-col gap-1">
-          <button
-            type="button"
-            onClick={() => handleNav('store', 'catalog')}
-            className="text-left px-3 py-2.5 rounded-lg text-sm font-medium text-slate-800 hover:bg-slate-50"
-          >
-            Catalog
-          </button>
-          <button
-            type="button"
-            onClick={() => handleNav('store', 'how-it-works')}
-            className="text-left px-3 py-2.5 rounded-lg text-sm font-medium text-slate-800 hover:bg-slate-50"
-          >
-            How It Works
-          </button>
-          <button
-            type="button"
-            onClick={() => handleNav('track')}
-            className="text-left px-3 py-2.5 rounded-lg text-sm font-medium text-slate-800 hover:bg-slate-50"
-          >
-            Track Order
-          </button>
-          <button
-            type="button"
-            onClick={() => handleNav('account')}
-            className="text-left px-3 py-2.5 rounded-lg text-sm font-medium text-slate-800 hover:bg-slate-50"
-          >
-            {user ? (user.role === 'admin' ? 'Admin Console' : 'Account') : 'Sign In'}
-          </button>
+        <div className="md:hidden border-t border-white/[0.07] bg-[#070B16] px-4 py-3 flex flex-col gap-1">
+          {[...navItems, { label: accountLabel, view: 'account' as ActiveView }].map((item) => (
+            <button
+              key={item.label}
+              type="button"
+              onClick={() => handleNav(item.view, item.anchor)}
+              className="text-left px-3 py-2.5 rounded-lg text-sm font-medium text-slate-200 hover:bg-white/[0.06]"
+            >
+              {item.label}
+            </button>
+          ))}
         </div>
       )}
     </header>
